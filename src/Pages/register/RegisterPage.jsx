@@ -43,32 +43,38 @@ const RegisterPage = () => {
     }));
   };
 
+  const renderTextField = (name, label, props = {}) => (
+    <Grid item xs={12} sm={6} key={name}>
+      <TextField
+        required={props.required}
+        fullWidth
+        id={name}
+        label={label}
+        name={name}
+        autoComplete={`new-${name}`}
+        value={inputsValue[name]}
+        onChange={handleInputsChange}
+        {...props}
+      />
+      {errorsState && errorsState[name] && (
+        <Alert severity="warning">{errorsState[name]}</Alert>
+      )}
+    </Grid>
+  );
+
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
-      const joiResponse = validateRegister({
-        inputsValue: inputsValue,
-      });
-      console.log("joiResponse", joiResponse);
+      const joiResponse = validateRegister({ inputsValue });
       setErrorsState(joiResponse);
-      // toast("Required fields* must be filled! 📎", {
-      //   position: "top-right",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "light",
-      // });
       if (!joiResponse) return;
-      // inputsValue.isBusiness = false;
+
       const errors = validateRegister(inputsValue);
-      console.log(errors);
       if (errors) return;
+
       let request = normalizeData(inputsValue);
       const { data } = await axios.post("/users", request);
-      console.log("data", data);
+
       navigate(ROUTES.LOGIN);
       toast("You signed up successfully 👌", {
         position: "top-right",
@@ -102,199 +108,23 @@ const RegisterPage = () => {
       </Typography>
       <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              autoComplete="given-name"
-              name="first"
-              required
-              fullWidth
-              id="first"
-              label="First Name"
-              autoFocus
-              value={inputsValue.first}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.first && (
-              <Alert severity="warning">{errorsState.first}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              autoComplete="given-name"
-              name="middle"
-              fullWidth
-              id="middle"
-              label="Middle Name"
-              autoFocus
-              value={inputsValue.middle}
-              onChange={handleInputsChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              required
-              fullWidth
-              id="last"
-              label="Last Name"
-              name="last"
-              autoComplete="family-name"
-              value={inputsValue.last}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.last && (
-              <Alert severity="warning">{errorsState.last}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              value={inputsValue.email}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.email && (
-              <Alert severity="warning">{errorsState.email}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="new-password"
-              value={inputsValue.password}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.password && (
-              <Alert severity="warning">{errorsState.password}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="phone"
-              label="Phone"
-              id="phone"
-              autoComplete="new-phone"
-              value={inputsValue.phone}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.phone && (
-              <Alert severity="warning">{errorsState.phone}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="url"
-              label="Url"
-              id="url"
-              autoComplete="new-url"
-              value={inputsValue.url}
-              onChange={handleInputsChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="alt"
-              label="Alt"
-              id="alt"
-              autoComplete="new-alt"
-              value={inputsValue.alt}
-              onChange={handleInputsChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="state"
-              label="State"
-              id="state"
-              autoComplete="new-state"
-              value={inputsValue.state}
-              onChange={handleInputsChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="country"
-              label="Country"
-              id="country"
-              autoComplete="new-country"
-              value={inputsValue.country}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.country && (
-              <Alert severity="warning">{errorsState.country}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="city"
-              label="City"
-              id="city"
-              autoComplete="new-city"
-              value={inputsValue.city}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.city && (
-              <Alert severity="warning">{errorsState.city}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="street"
-              label="Street"
-              id="street"
-              autoComplete="new-street"
-              value={inputsValue.street}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.street && (
-              <Alert severity="warning">{errorsState.street}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              required
-              fullWidth
-              name="houseNumber"
-              label="House Number"
-              id="houseNumber"
-              autoComplete="new-houseNumber"
-              value={inputsValue.houseNumber}
-              onChange={handleInputsChange}
-            />
-            {errorsState && errorsState.houseNumber && (
-              <Alert severity="warning">{errorsState.houseNumber}</Alert>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="zip"
-              label="Zip"
-              id="zip"
-              autoComplete="new-zip"
-              value={inputsValue.zip}
-              onChange={handleInputsChange}
-            />
-          </Grid>
+          {renderTextField("first", "First Name", { required: true })}
+          {renderTextField("middle", "Middle Name", { sm: 4 })}
+          {renderTextField("last", "Last Name", { required: true })}
+          {renderTextField("email", "Email Address", { required: true })}
+          {renderTextField("password", "Password", {
+            type: "password",
+            required: true,
+          })}
+          {renderTextField("phone", "Phone", { required: true })}
+          {renderTextField("url", "Url")}
+          {renderTextField("alt", "Alt")}
+          {renderTextField("state", "State")}
+          {renderTextField("country", "Country", { required: true })}
+          {renderTextField("city", "City", { required: true })}
+          {renderTextField("street", "Street", { required: true })}
+          {renderTextField("houseNumber", "House Number", { required: true })}
+          {renderTextField("zip", "Zip")}
           <Grid item xs={12}>
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
