@@ -43,6 +43,21 @@ const RegisterPage = () => {
     }));
   };
 
+  const isSubmitDisabled = () => {
+    const requiredFields = [
+      "first",
+      "last",
+      "email",
+      "password",
+      "phone",
+      "country",
+      "city",
+      "street",
+      "houseNumber",
+    ];
+    return requiredFields.some((field) => !inputsValue[field]);
+  };
+
   const renderTextField = (name, label, props = {}) => (
     <Grid item xs={12} sm={6} key={name}>
       <TextField
@@ -100,7 +115,7 @@ const RegisterPage = () => {
         alignItems: "center",
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+      <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
@@ -137,6 +152,7 @@ const RegisterPage = () => {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
+          disabled={isSubmitDisabled()}
         >
           Sign Up
         </Button>
