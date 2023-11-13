@@ -20,7 +20,7 @@ const normalizeData = (inputsValue) => {
       houseNumber: inputsValue.houseNumber,
       zip: +inputsValue.zip,
     },
-    isBusiness: true,
+    isBusiness: false,
   };
 };
 export { normalizeData };

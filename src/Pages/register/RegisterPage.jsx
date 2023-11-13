@@ -18,6 +18,7 @@ import { Alert } from "@mui/material";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [isBusinessAccount, setIsBusinessAccount] = useState(false);
   const [errorsState, setErrorsState] = useState(null);
   const [inputsValue, setInputsValue] = useState({
     first: "",
@@ -41,6 +42,10 @@ const RegisterPage = () => {
       ...currentState,
       [e.target.id]: e.target.value,
     }));
+  };
+
+  const handleCheckboxChange = (event) => {
+    setIsBusinessAccount(event.target.checked);
   };
 
   const isSubmitDisabled = () => {
@@ -142,7 +147,9 @@ const RegisterPage = () => {
           {renderTextField("zip", "Zip")}
           <Grid item xs={12}>
             <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
+              control={
+                <Checkbox color="primary" onChange={handleCheckboxChange} />
+              }
               label="Business Account"
             />
           </Grid>

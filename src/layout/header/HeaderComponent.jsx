@@ -13,13 +13,20 @@ import Links from "./ui/Links";
 import LeftDrawerComponent from "./ui/LeftDrawerComponent";
 import { useState } from "react";
 import FilterComponent from "./ui/FilterComponent";
+import { useNavigate } from "react-router-dom";
+import ROUTES from "../../routes/ROUTES";
+import { toast } from "react-toastify";
 
-const HeaderComponent = ({ isDarkTheme, onThemeChange }) => {
+const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const navigate = useNavigate();
+  const [token, setToken] = useState(
+    localStorage.getItem("token") || sessionStorage.getItem("token")
+  );
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -45,6 +52,28 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange }) => {
     setIsOpen(false);
   };
 
+  const handleLogout = () => {
+    if (token) {
+      console.log("Logout clicked");
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+      navigate(ROUTES.LOGIN);
+      toast("You logged out successfully, see you later 👋", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setToken(null);
+    } else {
+      return;
+    }
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -63,6 +92,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange }) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile Page</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 
@@ -107,7 +137,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange }) => {
           >
             BIZCARD.com
           </Typography>
-          <Links />
+          <Links userRole={userRole} />
           <FilterComponent />
           <Box
             sx={{
@@ -121,7 +151,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange }) => {
             <Switch checked={isDarkTheme} onChange={handleThemeChange} />
           </Box>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               size="large"
               edge="end"
@@ -133,6 +163,16 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange }) => {
             >
               <AccountCircle />
             </IconButton>
+            {token && ( // Display "Logout" button only if user is logged in
+              <Typography
+                variant="button"
+                color="inherit"
+                onClick={handleLogout}
+                style={{ cursor: "pointer", marginLeft: "8px" }}
+              >
+                Logout
+              </Typography>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

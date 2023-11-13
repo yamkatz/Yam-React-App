@@ -7,7 +7,7 @@ import tmc from "twin-moon-color";
 import { useDispatch, useSelector } from "react-redux";
 import { darkThemeActions } from "../store/darkThemeSlice";
 
-const LayoutComponent = ({ children }) => {
+const LayoutComponent = ({ children, userRole }) => {
   const isDarkTheme = useSelector((bigPie) => bigPie.darkThemeSlice.darkTheme);
   const dispatch = useDispatch();
 
@@ -30,6 +30,7 @@ const LayoutComponent = ({ children }) => {
       <HeaderComponent
         isDarkTheme={isDarkTheme}
         onThemeChange={handleThemeChange}
+        userRole={userRole}
       />
       <MainComponent>{children}</MainComponent>
       <FooterComponent />

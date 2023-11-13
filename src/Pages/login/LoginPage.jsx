@@ -20,6 +20,7 @@ import { validateLogin } from "../../validation/loginValidation";
 import { Alert } from "@mui/material";
 import useAutoLogin from "../../hooks/useAutoLogin";
 import { storeToken } from "../../service/storageService";
+import { authActions } from "../../store/authSlice";
 
 const LoginPage = () => {
   const [emailValue, setEmailValue] = useState("");
@@ -49,6 +50,9 @@ const LoginPage = () => {
         email: emailValue,
         password: passwordValue,
       });
+      const userData = data;
+      dispatch(authActions.login(userData));
+
       storeToken(data, rememberMe);
       toast("You logged in successfully 👌", {
         position: "top-right",
@@ -60,7 +64,7 @@ const LoginPage = () => {
         progress: undefined,
         theme: "light",
       });
-      // autoLogin(true);
+      autoLogin(true);
       navigate(ROUTES.HOME);
     } catch (err) {
       console.log("err from login", err);

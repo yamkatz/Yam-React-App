@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import nextKey from "generate-my-key";
-import {
-  alwaysLinks,
+import myLinks, {
   loggedInLinksGuest,
   loggedInLinksIsBusiness,
   loggedOutLinks,
@@ -12,37 +11,29 @@ import { useSelector } from "react-redux";
 
 const Links = () => {
   const loggedIn = useSelector((bigPie) => bigPie.authSlice.loggedIn);
+  const userData = useSelector((bigPie) => bigPie.authSlice.userData);
+
+  const linksToUserRole = () => {
+    if (!userData) {
+      return loggedOutLinks;
+    } else if (userData.isBusiness) {
+      return loggedInLinksIsBusiness;
+    } else if (userData.isAdmin) {
+      return loggedInLinksAdmin;
+    } else {
+      return loggedInLinksGuest;
+    }
+  };
+
+  const linksToShow = loggedIn ? linksToUserRole() : loggedOutLinks;
+
   return (
     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-      {alwaysLinks.map((myItem) => (
+      {linksToShow.map((myItem) => (
         <NavLinkComponent to={myItem.to} key={nextKey()}>
           {myItem.children}
         </NavLinkComponent>
       ))}
-      {loggedIn &&
-        loggedInLinksGuest.map((myItem) => (
-          <NavLinkComponent to={myItem.to} key={nextKey()}>
-            {myItem.children}
-          </NavLinkComponent>
-        ))}
-      {loggedIn &&
-        loggedInLinksIsBusiness.map((myItem) => (
-          <NavLinkComponent to={myItem.to} key={nextKey()}>
-            {myItem.children}
-          </NavLinkComponent>
-        ))}
-      {loggedIn &&
-        loggedInLinksAdmin.map((myItem) => (
-          <NavLinkComponent to={myItem.to} key={nextKey()}>
-            {myItem.children}
-          </NavLinkComponent>
-        ))}
-      {!loggedIn &&
-        loggedOutLinks.map((myItem) => (
-          <NavLinkComponent to={myItem.to} key={nextKey()}>
-            {myItem.children}
-          </NavLinkComponent>
-        ))}
     </Box>
   );
 };

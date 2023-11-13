@@ -12,15 +12,19 @@ const authSlice = createSlice({
     login(state, action) {
       state.loggedIn = true;
       state.userData = action.payload;
+      state.userRole = action.payload?.isBusiness
+        ? "business"
+        : action.payload?.isAdmin
+        ? "admin"
+        : "guest";
     },
     logout(state) {
       state.loggedIn = false;
+      state.userData = undefined;
+      state.userRole = "guest";
     },
   },
 });
 
-//export the set functions for the components to make use of the actions
 export const authActions = authSlice.actions;
-
-//in reducer we have all the necessary data to connect with the big pie
 export default authSlice.reducer;

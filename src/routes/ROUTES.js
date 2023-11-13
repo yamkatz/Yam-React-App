@@ -3,10 +3,9 @@ const ROUTES = {
   ABOUT: "/about",
   REGISTER: "/register",
   LOGIN: "/login",
-  PROFILE: "/profile",
   FAVCARDS: "/favoritecards",
   EDITCARD: "/editcard",
-  CREATECARD: "/Createcard",
+  CREATECARD: "/createcard",
   MYCARDS: "/mycards",
   SANDBOX: "/sandbox",
 };
