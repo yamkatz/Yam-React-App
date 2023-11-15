@@ -4,7 +4,11 @@ import validation from "./validation";
 const loginSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
-    .required(),
+    .required()
+    .messages({
+      "string.empty": "email must be filled to login",
+      "string.pattern.base": "email must be a vaild email address",
+    }),
   password: Joi.string()
     .pattern(
       new RegExp(

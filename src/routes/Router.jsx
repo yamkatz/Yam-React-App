@@ -1,17 +1,18 @@
 import { Route, Routes } from "react-router-dom";
 import ROUTES from "../routes/ROUTES";
 import HomePage from "../Pages/home/HomePage";
+import AboutPage from "../Pages/About/AboutPage";
 import RegisterPage from "../Pages/register/RegisterPage";
 import Error404Page from "../Pages/404/Error404Page";
 import LoginPage from "../Pages/login/LoginPage";
 import EditCardPage from "../Pages/EditCardPage/EditCardPage";
 import SandboxPage from "../Pages/Sandbox/SandboxPage";
 import CreateCardPage from "../Pages/createCardPage/CreateCardPage";
-import AuthGuard from "../Guard/AuthGuard";
-import BizGuard from "../Guard/BizGuard";
-import AboutPage from "../Pages/About/AboutPage";
 import FavCardsPage from "../Pages/FavCards/FavCardsPage";
 import MyCardsPage from "../Pages/MyCards/MyCardsPage";
+import AuthGuard from "../Guard/AuthGuard";
+import BizGuard from "../Guard/BizGuard";
+import AdminGuard from "../Guard/AdminGuard";
 import GuestGuard from "../Guard/GuestGuard";
 
 const Router = () => {
@@ -28,6 +29,9 @@ const Router = () => {
             <BizGuard>
               <CreateCardPage />
             </BizGuard>
+            <AdminGuard>
+              <CreateCardPage />
+            </AdminGuard>
           </AuthGuard>
         }
       />
@@ -38,16 +42,9 @@ const Router = () => {
             <BizGuard>
               <EditCardPage />
             </BizGuard>
-          </AuthGuard>
-        }
-      />
-      <Route
-        path={ROUTES.FAVCARDS}
-        element={
-          <AuthGuard>
-            <BizGuard>
-              <FavCardsPage />
-            </BizGuard>
+            <AdminGuard>
+              <EditCardPage />
+            </AdminGuard>
           </AuthGuard>
         }
       />
@@ -58,6 +55,12 @@ const Router = () => {
             <GuestGuard>
               <FavCardsPage />
             </GuestGuard>
+            <BizGuard>
+              <FavCardsPage />
+            </BizGuard>
+            <AdminGuard>
+              <FavCardsPage />
+            </AdminGuard>
           </AuthGuard>
         }
       />
@@ -68,6 +71,9 @@ const Router = () => {
             <BizGuard>
               <MyCardsPage />
             </BizGuard>
+            <AdminGuard>
+              <MyCardsPage />
+            </AdminGuard>
           </AuthGuard>
         }
       />
@@ -75,13 +81,13 @@ const Router = () => {
         path={ROUTES.SANDBOX}
         element={
           <AuthGuard>
-            <BizGuard>
+            <AdminGuard>
               <SandboxPage />
-            </BizGuard>
+            </AdminGuard>
           </AuthGuard>
         }
       />
-      <Route path="*" element={<Error404Page />} />
+      <Route path={"*"} element={<Error404Page />} />
     </Routes>
   );
 };

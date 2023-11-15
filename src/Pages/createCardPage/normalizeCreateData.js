@@ -1,13 +1,11 @@
-const normalizeData = (inputsValue) => {
+const normalizeCreateData = (inputsValue) => {
   return {
-    name: {
-      first: inputsValue.first,
-      middle: inputsValue.middle,
-      last: inputsValue.last,
-    },
+    title: inputsValue.title,
+    subtitle: inputsValue.subtitle,
+    description: inputsValue.description,
     phone: inputsValue.phone,
     email: inputsValue.email,
-    password: inputsValue.password,
+    web: inputsValue.web,
     image: {
       url: inputsValue.url,
       alt: inputsValue.alt,
@@ -20,7 +18,6 @@ const normalizeData = (inputsValue) => {
       houseNumber: inputsValue.houseNumber,
       zip: +inputsValue.zip,
     },
-    isBusiness: false,
   };
 };
-export { normalizeData };
+export { normalizeCreateData };

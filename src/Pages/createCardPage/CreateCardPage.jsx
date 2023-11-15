@@ -1,24 +1,22 @@
 import { useState } from "react";
-import {
-  Container,
-  TextField,
-  Grid,
-  Typography,
-  Divider,
-  Button,
-  Paper,
-} from "@mui/material";
-import { Link, useParams } from "react-router-dom";
-import ROUTES from "../../routes/ROUTES";
+import { TextField, Grid, Typography, Button, Box } from "@mui/material";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { validateCreateCard } from "../../validation/createCardValidation";
+import { Alert } from "@mui/material";
+import { toast } from "react-toastify";
+import { normalizeCreateData } from "./normalizeCreateData";
+import { useNavigate } from "react-router-dom";
+import ROUTES from "../../routes/ROUTES";
 
 const CreateCardPage = () => {
+  const navigate = useNavigate();
+  const [errorsState, setErrorsState] = useState(null);
   const [inputsValue, setInputValue] = useState({
     title: "",
     subtitle: "",
     phone: "",
-    add: "",
-    mail: "",
+    email: "",
     description: "",
     web: "",
     url: "",
@@ -31,205 +29,116 @@ const CreateCardPage = () => {
     zip: "",
   });
   const { id: _id } = useParams();
-  // console.log(_id);
-  const handleInputChange = (e) => {
+
+  const handleInputsChange = (e) => {
     setInputValue((currentState) => ({
       ...currentState,
       [e.target.id]: e.target.value,
     }));
   };
-  const handleUpdateChangesClick = async () => {
+
+  const isSubmitDisabled = () => {
+    const requiredFields = [
+      "title",
+      "subtitle",
+      "description",
+      "email",
+      "phone",
+      "country",
+      "city",
+      "street",
+      "houseNumber",
+    ];
+    return requiredFields.some((field) => !inputsValue[field]);
+  };
+
+  const renderTextField = (name, label, props = {}) => (
+    <Grid item xs={12} sm={6} key={name}>
+      <TextField
+        required={props.required}
+        fullWidth
+        id={name}
+        label={label}
+        name={name}
+        autoComplete={`new-${name}`}
+        defaultValue={inputsValue[name]}
+        onChange={handleInputsChange}
+        {...props}
+      />
+      {errorsState && errorsState[name] && (
+        <Alert severity="warning">{errorsState[name]}</Alert>
+      )}
+    </Grid>
+  );
+
+  const handleSubmit = async (event) => {
     try {
-      const { data } = await axios.post("/cards", {
-        title: inputsValue.title,
-        subtitle: inputsValue.subtitle,
-        description: inputsValue.description,
-        phone: inputsValue.phone,
-        email: inputsValue.mail,
-        web: inputsValue.web,
-        image: {
-          url: inputsValue.url,
-          alt: inputsValue.alt,
-        },
-        address: {
-          state: inputsValue.state,
-          country: inputsValue.country,
-          city: inputsValue.city,
-          street: inputsValue.street,
-          houseNumber: inputsValue.houseNumber,
-          zip: +inputsValue.zip,
-        },
-      });
-      console.log("data from response", data);
+      event.preventDefault();
+
+      const regexErrors = validateCreateCard(inputsValue);
+      setErrorsState(regexErrors);
+      if (!regexErrors) {
+        let request = normalizeCreateData(inputsValue);
+        const { data } = await axios.post("/cards", request);
+
+        navigate(ROUTES.MYCARDS);
+        toast("You created a new card 📇✅", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
     } catch (err) {
-      console.log("err", err.response);
+      console.error("Error during form submission:", err);
     }
   };
+
   return (
-    <Container sx={{ padding: "50px" }}>
-      <Typography variant="h2" sx={{ mb: 1, padding: "10px", pb: "0px" }}>
-        Card - Edit
+    <Box
+      sx={{
+        marginTop: 8,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Typography component="h1" variant="h5">
+        Create a Card
       </Typography>
-      <Typography variant="body1" sx={{ mb: 1, padding: "3px", ml: "7px" }}>
-        Put a new values in the correct input
-      </Typography>
-      <Divider sx={{ mb: 3 }} />
-      <Grid container flexDirection={"column"}>
-        <TextField
-          id="title"
-          label="Title"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.title}
-          required
-        />
-        <TextField
-          id="subtitle"
-          label="SubTitle"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.subtitle}
-          required
-        />
-        <TextField
-          id="phone"
-          label="Phone Number"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.phone}
-          required
-        />
-        <TextField
-          id="description"
-          label="Description"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.description}
-          required
-        />
-        <TextField
-          id="web"
-          label="Web"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.web}
-        />
-        <TextField
-          id="mail"
-          label="Email"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.mail}
-          required
-        />
-
-        <TextField
-          id="url"
-          label="Url"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.url}
-        />
-        <TextField
-          id="alt"
-          label="Alt"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.alt}
-        />
-
-        <TextField
-          id="state"
-          label="State"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.state}
-        />
-        <TextField
-          id="country"
-          label="Country"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.country}
-          required
-        />
-        <TextField
-          id="city"
-          label="City"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.city}
-          required
-        />
-        <TextField
-          id="street"
-          label="Street"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.street}
-          required
-        />
-        <TextField
-          id="houseNumber"
-          label="House Number"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.houseNumber}
-          required
-        />
-        <TextField
-          id="zip"
-          label="Zip"
-          variant="outlined"
-          sx={{ mt: "10px" }}
-          onChange={handleInputChange}
-          value={inputsValue.zip}
-        />
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item lg={8} md={8} sm={8} xs>
-          <Button
-            variant="outlined"
-            sx={{ mt: 2, width: "100%", ml: "0%", bgcolor: "lightskyblue" }}
-            onClick={handleUpdateChangesClick}
-          >
-            Update Changes
-          </Button>
+      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Grid container spacing={2}>
+          {renderTextField("title", "Title", { required: true })}
+          {renderTextField("subtitle", "Subtitle", { required: true })}
+          {renderTextField("description", "Description", { required: true })}
+          {renderTextField("phone", "Phone", { required: true })}
+          {renderTextField("email", "Email Address", { required: true })}
+          {renderTextField("web", "Web")}
+          {renderTextField("url", "Url")}
+          {renderTextField("alt", "Alt")}
+          {renderTextField("state", "State")}
+          {renderTextField("country", "Country", { required: true })}
+          {renderTextField("city", "City", { required: true })}
+          {renderTextField("street", "Street", { required: true })}
+          {renderTextField("houseNumber", "House Number", { required: true })}
+          {renderTextField("zip", "Zip")}
         </Grid>
-        <Grid item xs>
-          <Link to={ROUTES.HOME}>
-            <Button
-              variant="outlined"
-              sx={{
-                mt: 2,
-                width: "100%",
-                ml: "0%",
-                bgcolor: "navy",
-                color: "gray",
-              }}
-            >
-              Discard Changes
-            </Button>
-          </Link>
-        </Grid>
-      </Grid>
-      <Paper elevation={1} variant="elevation">
-        Special thanks to Inon
-      </Paper>
-    </Container>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          disabled={isSubmitDisabled()}
+        >
+          Create Card
+        </Button>
+      </Box>
+    </Box>
   );
 };
+
 export default CreateCardPage;

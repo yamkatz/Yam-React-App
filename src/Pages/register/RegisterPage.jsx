@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import { normalizeData } from "./normalizeData";
+import { normalizeRegisterData } from "./normalizeRegisterData";
 import { validateRegister } from "../../validation/registerValidation";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -92,7 +92,7 @@ const RegisterPage = () => {
       const errors = validateRegister(inputsValue);
       if (errors) return;
 
-      let request = normalizeData(inputsValue);
+      let request = normalizeRegisterData(inputsValue);
       const { data } = await axios.post("/users", request);
 
       navigate(ROUTES.LOGIN);
