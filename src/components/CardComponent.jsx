@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Card,
@@ -12,8 +13,8 @@ import {
 import PhoneIcon from "@mui/icons-material/Phone";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import PropTypes from "prop-types";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const CardComponent = ({
   _id,
@@ -27,19 +28,27 @@ const CardComponent = ({
   cardNumber,
   onDeleteCard,
   onEditCard,
+  onLikeCard,
+  setDataFromServer,
+  isLoggedIn,
 }) => {
-  console.log("CardComponent");
   const handlePhoneClick = () => {
     console.log("you clicked on phone btn");
   };
+
   const handleDeleteCardClick = () => {
     console.log("_id to delete (CardComponent)", _id);
     onDeleteCard(_id);
   };
+
   const handleClickEditCard = () => {
-    // console.log("move to edit card page");
     onEditCard(_id);
   };
+
+  const handleLikeCardClick = () => {
+    onLikeCard(_id, setDataFromServer);
+  };
+
   return (
     <Card>
       <CardActionArea>
@@ -81,9 +90,11 @@ const CardComponent = ({
             <IconButton onClick={handleDeleteCardClick}>
               <DeleteIcon />
             </IconButton>
-            <IconButton>
-              <FavoriteIcon color={like ? "favActive" : ""} />
-            </IconButton>
+            {isLoggedIn && (
+              <IconButton onClick={handleLikeCardClick}>
+                <FavoriteIcon color={like ? "favActive" : "false"} />
+              </IconButton>
+            )}
           </Box>
         </Box>
       </CardContent>
@@ -103,7 +114,10 @@ CardComponent.propTypes = {
   cardNumber: PropTypes.number,
   onDeleteCard: PropTypes.func.isRequired,
   onEditCard: PropTypes.func.isRequired,
+  onLikeCard: PropTypes.func.isRequired,
+  setDataFromServer: PropTypes.func.isRequired,
 };
+
 CardComponent.defaultProps = {
   img: "https://www.livemint.com/lm-img/img/2023/08/14/1600x900/garena_free_fire_max_1688877791610_1691982307589.jpg",
   alt: "running",

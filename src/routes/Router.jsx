@@ -36,7 +36,7 @@ const Router = () => {
         }
       />
       <Route
-        path={ROUTES.EDITCARD}
+        path={`${ROUTES.EDITCARD}/:_id`}
         element={
           <AuthGuard>
             <BizGuard>
