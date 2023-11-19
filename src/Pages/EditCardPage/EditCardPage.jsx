@@ -28,16 +28,13 @@ const EditCardPage = () => {
     houseNumber: "",
     zip: "",
   });
+
   const { _id } = useParams();
-  console.log("id2", _id);
 
   useEffect(() => {
-    console.log("id", _id);
-
     axios
       .get("/cards/" + _id)
       .then(({ data }) => {
-        console.log("data", data);
         setInputValue(data);
       })
       .catch((err) => {
@@ -45,9 +42,7 @@ const EditCardPage = () => {
       });
   }, [_id]);
 
-  useEffect(() => {
-    console.log("Updated State:", inputsValue);
-  }, [inputsValue]);
+  useEffect(() => {}, [inputsValue]);
 
   const handleInputsChange = (e) => {
     setInputValue((currentState) => ({
@@ -81,7 +76,6 @@ const EditCardPage = () => {
         name={name}
         value={inputsValue[name]}
         autoComplete={`new-${name}`}
-        // defaultValue={inputsValue[name]}
         onChange={handleInputsChange}
         {...props}
       />
@@ -94,13 +88,16 @@ const EditCardPage = () => {
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
-      console.log("Inputs Value:", inputsValue);
+
       const regexErrors = validateEditCard(inputsValue);
       setErrorsState(regexErrors);
+
       if (!regexErrors) {
         let request = normalizeEditData(inputsValue);
+
         const { data } = await axios.put("/cards/" + _id, request);
-        navigate(ROUTES.MYCARDS);
+
+        navigate(ROUTES.HOME);
         toast("Your edits were applied successfully 🔨👷‍♂️", {
           position: "top-right",
           autoClose: 5000,

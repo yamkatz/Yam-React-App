@@ -47,12 +47,12 @@ const validateEditCard = (inputToCheck) => {
     errors.url = "Invalid URL";
   }
 
-  const altPattern = /^[1-9]\d*$/;
+  const altPattern = /^[a-zA-Z\s,'-]+$/;
   if (inputToCheck.alt && !altPattern.test(inputToCheck.alt)) {
     errors.alt = "Invalid Alt value";
   }
 
-  const statePattern = /^[1-9]\d*$/;
+  const statePattern = /^[a-zA-Z\s,'-]+$/;
   if (inputToCheck.state && !statePattern.test(inputToCheck.state)) {
     errors.state = "Invalid State value";
   }
@@ -65,7 +65,7 @@ const validateEditCard = (inputToCheck) => {
     errors.country = "Country is required";
   }
 
-  const cityPattern = /^[a-zA-Z0-9\s,'-]*$/;
+  const cityPattern = /^[a-zA-Z\s,'-]+$/;
   if (!cityPattern.test(inputToCheck.city)) {
     errors.city = "Invalid City value";
   }
@@ -73,7 +73,7 @@ const validateEditCard = (inputToCheck) => {
     errors.city = "City is required";
   }
 
-  const streetPattern = /^[a-zA-Z0-9\s,'-]*$/;
+  const streetPattern = /^[a-zA-Z\s,'-]+$/;
   if (!streetPattern.test(inputToCheck.street)) {
     errors.street = "Invalid Street value";
   }

@@ -31,13 +31,12 @@ const CardComponent = ({
   onLikeCard,
   setDataFromServer,
   isLoggedIn,
+  isAuth,
+  userData,
 }) => {
-  const handlePhoneClick = () => {
-    console.log("you clicked on phone btn");
-  };
+  const handlePhoneClick = () => {};
 
   const handleDeleteCardClick = () => {
-    console.log("_id to delete (CardComponent)", _id);
     onDeleteCard(_id);
   };
 
@@ -79,17 +78,24 @@ const CardComponent = ({
         </Box>
         <Box display="flex" justifyContent="space-between">
           <Box>
+            {isAuth &&
+              isLoggedIn &&
+              (userData.isBusiness || userData.isAdmin) && (
+                <React.Fragment>
+                  <IconButton onClick={handleClickEditCard}>
+                    <CreateIcon />
+                  </IconButton>
+                  <IconButton onClick={handleDeleteCardClick}>
+                    <DeleteIcon />
+                  </IconButton>
+                </React.Fragment>
+              )}
+          </Box>
+          <Box>
             <IconButton onClick={handlePhoneClick}>
               <PhoneIcon />
             </IconButton>
-            <IconButton onClick={handleClickEditCard}>
-              <CreateIcon />
-            </IconButton>
-          </Box>
-          <Box>
-            <IconButton onClick={handleDeleteCardClick}>
-              <DeleteIcon />
-            </IconButton>
+
             {isLoggedIn && (
               <IconButton onClick={handleLikeCardClick}>
                 <FavoriteIcon color={like ? "favActive" : "false"} />
