@@ -15,7 +15,6 @@ import { useState } from "react";
 import FilterComponent from "./ui/FilterComponent";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/ROUTES";
-import { toast } from "react-toastify";
 
 const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -54,20 +53,9 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
 
   const handleLogout = () => {
     if (token) {
-      console.log("Logout clicked");
       localStorage.removeItem("token");
       sessionStorage.removeItem("token");
       navigate(ROUTES.LOGIN);
-      toast("You logged out successfully, see you later 👋", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
       setToken(null);
     } else {
       return;
@@ -163,7 +151,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
             >
               <AccountCircle />
             </IconButton>
-            {token && ( // Display "Logout" button only if user is logged in
+            {token && (
               <Typography
                 variant="button"
                 color="inherit"

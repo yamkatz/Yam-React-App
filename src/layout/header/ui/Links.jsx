@@ -16,7 +16,7 @@ const Links = () => {
   const linksToUserRole = () => {
     if (!userData) {
       return loggedOutLinks;
-    } else if (userData.isBusiness) {
+    } else if (userData.isBusiness && !userData.isAdmin) {
       return loggedInLinksIsBusiness;
     } else if (userData.isAdmin) {
       return loggedInLinksAdmin;

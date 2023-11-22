@@ -12,7 +12,6 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import ROUTES from "../../routes/ROUTES";
@@ -52,20 +51,10 @@ const LoginPage = () => {
       });
       const userData = data;
       dispatch(authActions.login(userData));
-
       storeToken(data, rememberMe);
-      toast("You logged in successfully 👌", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      autoLogin(true);
       navigate(ROUTES.HOME);
+      window.location.reload();
+      autoLogin(true);
     } catch (err) {
       console.log("err from login", err);
     }
