@@ -14,6 +14,8 @@ import AuthGuard from "../Guard/AuthGuard";
 import BizGuard from "../Guard/BizGuard";
 import AdminGuard from "../Guard/AdminGuard";
 import GuestGuard from "../Guard/GuestGuard";
+import ProfilePage from "../Pages/ProfilePage/ProfilePage";
+import EditProfilePage from "../Pages/ProfilePage/EditProfilePage";
 
 const Router = () => {
   return (
@@ -60,6 +62,38 @@ const Router = () => {
             </BizGuard>
             <AdminGuard>
               <FavCardsPage />
+            </AdminGuard>
+          </AuthGuard>
+        }
+      />
+      <Route
+        path={ROUTES.PROFILE}
+        element={
+          <AuthGuard>
+            <GuestGuard>
+              <ProfilePage />
+            </GuestGuard>
+            <BizGuard>
+              <ProfilePage />
+            </BizGuard>
+            <AdminGuard>
+              <ProfilePage />
+            </AdminGuard>
+          </AuthGuard>
+        }
+      />
+      <Route
+        path={ROUTES.EDITPRO}
+        element={
+          <AuthGuard>
+            <GuestGuard>
+              <EditProfilePage />
+            </GuestGuard>
+            <BizGuard>
+              <EditProfilePage />
+            </BizGuard>
+            <AdminGuard>
+              <EditProfilePage />
             </AdminGuard>
           </AuthGuard>
         }

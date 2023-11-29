@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/ROUTES";
 import { Alert } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -65,6 +67,19 @@ const RegisterPage = () => {
 
   const renderTextField = (name, label, props = {}) => (
     <Grid item xs={12} sm={6} key={name}>
+      {name === "password" && (
+        <Tooltip
+          title={
+            <Typography variant="body1">
+              Password must be at least nine characters long and contain an
+              uppercase letter, a lowercase letter, a number, and one of the
+              following characters: !@#$%^&*-
+            </Typography>
+          }
+        >
+          <InfoOutlinedIcon style={{ marginRight: "5px", cursor: "pointer" }} />
+        </Tooltip>
+      )}
       <TextField
         required={props.required}
         fullWidth

@@ -19,13 +19,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 const CardComponent = ({
   _id,
   title,
-  subTitle,
+  subtitle,
   phone,
   address,
   img,
   alt,
   like,
-  cardNumber,
+  description,
   onDeleteCard,
   onEditCard,
   onLikeCard,
@@ -33,6 +33,7 @@ const CardComponent = ({
   isLoggedIn,
   isAuth,
   userData,
+  onShowDetails,
 }) => {
   const handlePhoneClick = () => {};
 
@@ -48,15 +49,32 @@ const CardComponent = ({
     onLikeCard(_id, setDataFromServer);
   };
 
+  const handleShowDetailsClick = () => {
+    onShowDetails({
+      img,
+      title,
+      subtitle,
+      description,
+      phone,
+      address,
+    });
+  };
+
   return (
     <Card>
-      <CardActionArea>
+      <CardActionArea onClick={handleShowDetailsClick}>
         <CardMedia component="img" image={img} alt={alt} />
       </CardActionArea>
       <CardContent>
-        <CardHeader title={title} subheader={subTitle} sx={{ p: 0, mb: 1 }} />
+        <CardHeader title={title} subheader={subtitle} sx={{ p: 0, mb: 1 }} />
         <Divider />
         <Box sx={{ mt: 1 }}>
+          <Typography variant="body2">
+            <Typography fontWeight="500" variant="subtitle1" component="span">
+              Description:{" "}
+            </Typography>
+            {description}
+          </Typography>
           <Typography variant="body2">
             <Typography fontWeight="700" variant="subtitle1" component="span">
               Phone:{" "}
@@ -68,12 +86,6 @@ const CardComponent = ({
               Address:{" "}
             </Typography>
             {address}
-          </Typography>
-          <Typography variant="body2">
-            <Typography fontWeight="700" variant="subtitle1" component="span">
-              Card Number:{" "}
-            </Typography>
-            {cardNumber}
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between">
@@ -111,17 +123,18 @@ const CardComponent = ({
 CardComponent.propTypes = {
   _id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  subTitle: PropTypes.string,
+  subtitle: PropTypes.string,
   phone: PropTypes.string,
   address: PropTypes.string,
   img: PropTypes.string,
   alt: PropTypes.string,
   like: PropTypes.bool,
-  cardNumber: PropTypes.number,
   onDeleteCard: PropTypes.func.isRequired,
   onEditCard: PropTypes.func.isRequired,
   onLikeCard: PropTypes.func.isRequired,
-  setDataFromServer: PropTypes.func.isRequired,
+  setDataFromServer: PropTypes.func,
+  description: PropTypes.string.isRequired,
+  onShowDetails: PropTypes.func.isRequired,
 };
 
 CardComponent.defaultProps = {

@@ -23,18 +23,13 @@ const validateCreateCard = (inputToCheck) => {
   }
 
   const phonePattern = /^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$/;
-  if (!inputToCheck.phone) {
-    errors.phone = "Phone is required";
-  } else if (!phonePattern.test(inputToCheck.phone)) {
+  if (!phonePattern.test(inputToCheck.phone)) {
     errors.phone = "Invalid phone number";
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailPattern.test(inputToCheck.email)) {
     errors.email = "Invalid email address";
-  }
-  if (!inputToCheck.email) {
-    errors.email = "Email address is required";
   }
 
   const webPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
@@ -47,46 +42,34 @@ const validateCreateCard = (inputToCheck) => {
     errors.url = "Invalid URL";
   }
 
-  const altPattern = /^[a-zA-Z\s,'-]+$/;
+  const altPattern = /^[a-zA-Z\s,'-]{2,256}$/;
   if (inputToCheck.alt && !altPattern.test(inputToCheck.alt)) {
     errors.alt = "Invalid Alt value";
   }
 
-  const statePattern = /^[a-zA-Z\s,'-]+$/;
+  const statePattern = /^[a-zA-Z\s,'-]{2,256}$/;
   if (inputToCheck.state && !statePattern.test(inputToCheck.state)) {
     errors.state = "Invalid State value";
   }
 
-  const countryPattern = /^[a-zA-Z\s,'-]+$/;
+  const countryPattern = /^[a-zA-Z\s,'-]{2,256}$/;
   if (!countryPattern.test(inputToCheck.country)) {
     errors.country = "Invalid Country value";
   }
-  if (!inputToCheck.country) {
-    errors.country = "Country is required";
-  }
 
-  const cityPattern = /^[a-zA-Z\s,'-]+$/;
+  const cityPattern = /^[a-zA-Z\s,'-]{2,256}$/;
   if (!cityPattern.test(inputToCheck.city)) {
     errors.city = "Invalid City value";
   }
-  if (!inputToCheck.city) {
-    errors.city = "City is required";
-  }
 
-  const streetPattern = /^[a-zA-Z\s,'-]+$/;
+  const streetPattern = /^[a-zA-Z\s,'-]{2,256}$/;
   if (!streetPattern.test(inputToCheck.street)) {
     errors.street = "Invalid Street value";
-  }
-  if (!inputToCheck.street) {
-    errors.street = "Street is required";
   }
 
   const houseNumberPattern = /^[1-9]\d*$/;
   if (!houseNumberPattern.test(inputToCheck.houseNumber)) {
     errors.houseNumber = "Invalid House Number value";
-  }
-  if (!inputToCheck.houseNumber) {
-    errors.houseNumber = "house number is required";
   }
 
   const zipPattern = /^[1-9]\d*$/;

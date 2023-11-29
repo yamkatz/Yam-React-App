@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography, useTheme } from "@mui/material";
 import nextKey from "generate-my-key";
 import CardComponent from "../../components/CardComponent";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +9,15 @@ import { useSelector } from "react-redux";
 import AuthTokenService from "../../service/authTokenService";
 import myCardsNormalization from "./myCardsNormalization"; // Import the normalization file
 import { toast } from "react-toastify";
+import MoreInfoComponent from "../../components/MoreInfoComponent";
 
 const MyCardsPage = () => {
   const [myCards, setMyCards] = useState([]);
   const navigate = useNavigate();
   const userData = useSelector((bigPie) => bigPie.authSlice.userData);
   const isLoggedIn = AuthTokenService.isUserLoggedIn();
+  const [selectedCard, setSelectedCard] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -119,12 +122,27 @@ const MyCardsPage = () => {
         console.error("Error liking card:", error);
       });
   };
+
+  const handleShowDetails = (cardDetails) => {
+    setSelectedCard(cardDetails);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedCard(null);
+  };
+
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h2" fontFamily="lucida" textAlign="center">
         Welcome to Your Created Cards Page!
       </Typography>
-      <Typography variant="body1" paragraph>
+      <Typography
+        textAlign="center"
+        sx={{
+          marginBottom: 3,
+          [theme.breakpoints.down("sm")]: {},
+        }}
+      >
         Explore and manage the cards you've created. Make any edits or deletions
         as needed.
       </Typography>
@@ -135,21 +153,28 @@ const MyCardsPage = () => {
               _id={card._id}
               title={card.title}
               subTitle={card.subtitle}
+              description={card.description}
               phone={card.phone}
               address={`${card.address.city}, ${card.address.street} ${card.address.houseNumber}`}
               img={card.image.url}
               alt={card.image.alt}
               like={card.likes}
-              cardNumber={card.cardNumber}
               onDeleteCard={handleDeleteCard}
               onEditCard={handleEditCard}
               onLikeCard={handleLikeCard}
               isLoggedIn={isLoggedIn}
               isAuth={isAuth}
               userData={userData}
+              onShowDetails={handleShowDetails}
             />
           </Grid>
         ))}
+        {selectedCard && (
+          <MoreInfoComponent
+            cardDetails={selectedCard}
+            onClose={handleCloseDetails}
+          />
+        )}
       </Grid>
     </Container>
   );

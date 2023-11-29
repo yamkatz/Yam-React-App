@@ -1,40 +1,24 @@
-const validateEditCard = (inputToCheck) => {
+const profileValidation = (inputToCheck) => {
   const errors = {};
-  if (
-    !inputToCheck.title ||
-    inputToCheck.title.length < 2 ||
-    inputToCheck.title.length > 256
-  ) {
-    errors.title = "Title must be between 2 and 256 characters";
+
+  const firstPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!firstPattern.test(inputToCheck.first)) {
+    errors.first = "Invalid first name";
   }
-  if (
-    !inputToCheck.subtitle ||
-    inputToCheck.subtitle.length < 2 ||
-    inputToCheck.subtitle.length > 256
-  ) {
-    errors.subtitle = "Subtitle must be between 2 and 256 characters";
+
+  const middlePattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (inputToCheck.middle && !middlePattern.test(inputToCheck.middle)) {
+    errors.middle = "Invalid middle name";
   }
-  if (
-    !inputToCheck.description ||
-    inputToCheck.description.length < 2 ||
-    inputToCheck.description.length > 1024
-  ) {
-    errors.description = "Description must be between 2 and 1024 characters";
+
+  const lastPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!lastPattern.test(inputToCheck.last)) {
+    errors.last = "Invalid last name";
   }
 
   const phonePattern = /^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$/;
   if (!phonePattern.test(inputToCheck.phone)) {
     errors.phone = "Invalid phone number";
-  }
-
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(inputToCheck.email)) {
-    errors.email = "Invalid email address";
-  }
-
-  const webPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
-  if (inputToCheck.web && !webPattern.test(inputToCheck.web)) {
-    errors.web = "Invalid web address";
   }
 
   const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
@@ -79,4 +63,5 @@ const validateEditCard = (inputToCheck) => {
 
   return Object.keys(errors).length === 0 ? null : errors;
 };
-export { validateEditCard };
+
+export { profileValidation };

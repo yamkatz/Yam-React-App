@@ -13,7 +13,6 @@ import nextKey from "generate-my-key";
 
 const LeftDrawerComponent = ({ isOpen, onCloseDrawer }) => {
   const navigate = useNavigate();
-  const loggedIn = useSelector((bigPie) => bigPie.authSlice.loggedIn);
   const userData = useSelector((bigPie) => bigPie.authSlice.userData);
 
   const linksToUserRole = () => {
@@ -50,7 +49,7 @@ const LeftDrawerComponent = ({ isOpen, onCloseDrawer }) => {
     }
   };
 
-  const linksToShow = loggedIn ? linksToUserRole() : [];
+  const linksToShow = linksToUserRole();
 
   const handleItemClick = (route) => {
     navigate(route);

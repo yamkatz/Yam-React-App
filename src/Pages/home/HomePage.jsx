@@ -10,6 +10,7 @@ import useQueryParams from "../../hooks/useQueryParams";
 import WelcomeComponent from "../../components/WelcomeComponent";
 import AuthTokenService from "../../service/authTokenService";
 import { toast } from "react-toastify";
+import MoreInfoComponent from "../../components/MoreInfoComponent";
 
 let initialDataFromServer = [];
 
@@ -18,6 +19,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const userData = useSelector((bigPie) => bigPie.authSlice.userData);
   const query = useQueryParams();
+  const [selectedCard, setSelectedCard] = useState(null);
 
   useEffect(() => {
     axios
@@ -138,6 +140,14 @@ const HomePage = () => {
       });
   };
 
+  const handleShowDetails = (cardDetails) => {
+    setSelectedCard(cardDetails);
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedCard(null);
+  };
+
   return (
     <Container>
       <WelcomeComponent />
@@ -147,23 +157,30 @@ const HomePage = () => {
             <CardComponent
               _id={card._id}
               title={card.title}
-              subTitle={card.subtitle}
+              subtitle={card.subtitle}
+              description={card.description}
               phone={card.phone}
               address={`${card.address.city}, ${card.address.street} ${card.address.houseNumber}`}
               img={card.image.url}
               alt={card.image.alt}
               like={card.likes}
-              cardNumber={card.cardNumber}
               onDeleteCard={handleDeleteCard}
               onEditCard={handleEditCard}
               onLikeCard={handleLikeCard}
               isLoggedIn={isLoggedIn}
               isAuth={isAuth}
               userData={userData}
+              onShowDetails={handleShowDetails}
             />
           </Grid>
         ))}
       </Grid>
+      {selectedCard && (
+        <MoreInfoComponent
+          cardDetails={selectedCard}
+          onClose={handleCloseDetails}
+        />
+      )}
     </Container>
   );
 };

@@ -1,43 +1,32 @@
-import * as React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Switch } from "@mui/material";
 import Links from "./ui/Links";
 import LeftDrawerComponent from "./ui/LeftDrawerComponent";
-import { useState } from "react";
 import FilterComponent from "./ui/FilterComponent";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/ROUTES";
+import { toast } from "react-toastify";
 
 const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const navigate = useNavigate();
   const [token, setToken] = useState(
     localStorage.getItem("token") || sessionStorage.getItem("token")
   );
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+  const handleProfilePage = () => {
+    if (token) {
+      navigate(ROUTES.PROFILE);
+    } else {
+      toast.error("You need to be a logged in user to access your profile");
+    }
   };
 
   const handleThemeChange = (event) => {
@@ -56,52 +45,12 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
       localStorage.removeItem("token");
       sessionStorage.removeItem("token");
       navigate(ROUTES.LOGIN);
+      window.location.reload();
       setToken(null);
     } else {
       return;
     }
   };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile Page</MenuItem>
-      <MenuItem onClick={handleLogout}>Logout</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = "primary-search-account-menu-mobile";
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    ></Menu>
-  );
 
   return (
     <Box sx={{ flexGrow: 1, mb: 2 }}>
@@ -117,6 +66,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography
             variant="h6"
             noWrap
@@ -125,6 +75,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
           >
             BIZCARD.com
           </Typography>
+
           <Links userRole={userRole} />
           <FilterComponent />
           <Box
@@ -139,18 +90,18 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
             <Switch checked={isDarkTheme} onChange={handleThemeChange} />
           </Box>
           <Box sx={{ flexGrow: 1 }} />
+
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+              onClick={handleProfilePage}
               color="inherit"
             >
               <AccountCircle />
             </IconButton>
+
             {token && (
               <Typography
                 variant="button"
@@ -164,8 +115,7 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
+
       <LeftDrawerComponent
         isOpen={isOpen}
         onCloseDrawer={handleCloseDrawerClick}
@@ -173,4 +123,5 @@ const HeaderComponent = ({ isDarkTheme, onThemeChange, userRole }) => {
     </Box>
   );
 };
+
 export default HeaderComponent;

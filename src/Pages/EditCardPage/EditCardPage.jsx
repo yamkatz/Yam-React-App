@@ -12,7 +12,7 @@ import { validateEditCard } from "../../validation/editCardValidation";
 const EditCardPage = () => {
   const navigate = useNavigate();
   const [errorsState, setErrorsState] = useState(null);
-  const [inputsValue, setInputValue] = useState({
+  const [inputsValue, setInputsValue] = useState({
     title: "",
     subtitle: "",
     phone: "",
@@ -35,7 +35,7 @@ const EditCardPage = () => {
     axios
       .get("/cards/" + _id)
       .then(({ data }) => {
-        setInputValue(data);
+        setInputsValue(data);
       })
       .catch((err) => {
         console.log("err", err);
@@ -45,7 +45,7 @@ const EditCardPage = () => {
   useEffect(() => {}, [inputsValue]);
 
   const handleInputsChange = (e) => {
-    setInputValue((currentState) => ({
+    setInputsValue((currentState) => ({
       ...currentState,
       [e.target.id]: e.target.value,
     }));
