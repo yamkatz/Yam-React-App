@@ -2,17 +2,20 @@ const profileValidation = (inputToCheck) => {
   const errors = {};
 
   const firstPattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (!firstPattern.test(inputToCheck.first)) {
+  if (!firstPattern.test(inputToCheck.name.first)) {
     errors.first = "Invalid first name";
   }
 
   const middlePattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (inputToCheck.middle && !middlePattern.test(inputToCheck.middle)) {
+  if (
+    inputToCheck.name.middle &&
+    !middlePattern.test(inputToCheck.name.middle)
+  ) {
     errors.middle = "Invalid middle name";
   }
 
   const lastPattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (!lastPattern.test(inputToCheck.last)) {
+  if (!lastPattern.test(inputToCheck.name.last)) {
     errors.last = "Invalid last name";
   }
 
@@ -22,42 +25,45 @@ const profileValidation = (inputToCheck) => {
   }
 
   const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
-  if (inputToCheck.url && !urlPattern.test(inputToCheck.url)) {
+  if (inputToCheck.image.url && !urlPattern.test(inputToCheck.image.url)) {
     errors.url = "Invalid URL";
   }
 
   const altPattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (inputToCheck.alt && !altPattern.test(inputToCheck.alt)) {
+  if (inputToCheck.image.alt && !altPattern.test(inputToCheck.image.alt)) {
     errors.alt = "Invalid Alt value";
   }
 
   const statePattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (inputToCheck.state && !statePattern.test(inputToCheck.state)) {
+  if (
+    inputToCheck.address.state &&
+    !statePattern.test(inputToCheck.address.state)
+  ) {
     errors.state = "Invalid State value";
   }
 
   const countryPattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (!countryPattern.test(inputToCheck.country)) {
+  if (!countryPattern.test(inputToCheck.address.country)) {
     errors.country = "Invalid Country value";
   }
 
   const cityPattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (!cityPattern.test(inputToCheck.city)) {
+  if (!cityPattern.test(inputToCheck.address.city)) {
     errors.city = "Invalid City value";
   }
 
   const streetPattern = /^[a-zA-Z\s,'-]{2,256}$/;
-  if (!streetPattern.test(inputToCheck.street)) {
+  if (!streetPattern.test(inputToCheck.address.street)) {
     errors.street = "Invalid Street value";
   }
 
   const houseNumberPattern = /^[1-9]\d*$/;
-  if (!houseNumberPattern.test(inputToCheck.houseNumber)) {
+  if (!houseNumberPattern.test(inputToCheck.address.houseNumber)) {
     errors.houseNumber = "Invalid House Number value";
   }
 
   const zipPattern = /^[1-9]\d*$/;
-  if (inputToCheck.zip && !zipPattern.test(inputToCheck.zip)) {
+  if (inputToCheck.address.zip && !zipPattern.test(inputToCheck.address.zip)) {
     errors.zip = "Invalid Zip value";
   }
 

@@ -1,23 +1,24 @@
 const normalizeProfileData = (inputsValue) => {
   return {
     name: {
-      first: inputsValue.first,
-      middle: inputsValue.middle,
-      last: inputsValue.last,
+      first: inputsValue.name.first,
+      middle: inputsValue.name.middle,
+      last: inputsValue.name.last,
     },
     phone: inputsValue.phone,
     image: {
-      url: inputsValue.url,
-      alt: inputsValue.alt,
+      url: inputsValue.image.url,
+      alt: inputsValue.image.alt,
     },
     address: {
-      state: inputsValue.state,
-      country: inputsValue.country,
-      city: inputsValue.city,
-      street: inputsValue.street,
-      houseNumber: inputsValue.houseNumber,
-      zip: +inputsValue.zip,
+      state: inputsValue.address.state,
+      country: inputsValue.address.country,
+      city: inputsValue.address.city,
+      street: inputsValue.address.street,
+      houseNumber: inputsValue.address.houseNumber,
+      zip: +inputsValue.address.zip,
     },
   };
 };
+
 export { normalizeProfileData };

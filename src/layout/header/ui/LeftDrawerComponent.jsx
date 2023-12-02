@@ -23,7 +23,7 @@ const LeftDrawerComponent = ({ isOpen, onCloseDrawer }) => {
         { to: ROUTES.REGISTER, children: "Register" },
         { to: ROUTES.LOGIN, children: "Login" },
       ];
-    } else if (userData.isBusiness) {
+    } else if (userData.isBusiness && !userData.isAdmin) {
       return [
         { to: ROUTES.HOME, children: "Home" },
         { to: ROUTES.ABOUT, children: "About" },

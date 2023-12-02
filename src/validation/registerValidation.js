@@ -1,45 +1,78 @@
-import Joi from "joi";
-import validation from "./validation";
+const registerValidation = (inputToCheck) => {
+  const errors = {};
 
-const registerSchema = Joi.object({
-  first: Joi.string().min(2).max(256).required(),
-  middle: Joi.string().min(2).max(256).allow(""),
-  last: Joi.string().min(2).max(256).required(),
-  phone: Joi.string()
-    .min(9)
-    .max(11)
-    .pattern(/^\+?(972|0)(\-)?0?(([23489]{1}\d{7})|[5]{1}\d{8})$/)
-    .required(),
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .min(5)
-    .required(),
-  password: Joi.string()
-    .pattern(
-      new RegExp(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*-])[A-Za-z\d!@#$%^&*-]{6,}$/
-      )
-    )
-    .messages({
-      "string.pattern.base":
-        "password must be at least nine characters long and contain an uppercase letter, a lowercase letter, a number and one of the following characters !@#$%^&*-",
-      "string.empty": "required fields* must be filled",
-    })
-    .min(7)
-    .max(20)
-    .required(),
-  url: Joi.string().min(14).allow(""),
-  alt: Joi.string().min(2).max(256).allow(""),
-  state: Joi.string().min(2).max(256).allow(""),
-  country: Joi.string().min(2).max(256).required(),
-  city: Joi.string().min(2).max(256).required(),
-  street: Joi.string().min(2).max(256).required(),
-  houseNumber: Joi.number().min(2).max(256).required(),
-  zip: Joi.number().min(2).max(256).allow(""),
-  isBusiness: Joi.boolean().allow(""),
-});
+  const firstPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!firstPattern.test(inputToCheck.first)) {
+    errors.first = "Invalid first name";
+  }
 
-const validateRegister = (inputToCheck) =>
-  validation(registerSchema, inputToCheck);
+  const middlePattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (inputToCheck.middle && !middlePattern.test(inputToCheck.middle)) {
+    errors.middle = "Invalid middle name";
+  }
 
-export { validateRegister };
+  const lastPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!lastPattern.test(inputToCheck.last)) {
+    errors.last = "Invalid last name";
+  }
+
+  const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  if (!emailPattern.test(inputToCheck.email)) {
+    errors.email = "Invalid email address";
+  }
+
+  const passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*-])[A-Za-z\d!@#$%^&*-]{6,}$/;
+  if (!passwordPattern.test(inputToCheck.password)) {
+    errors.password = "Invalid password";
+  }
+
+  const phonePattern = /^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$/;
+  if (!phonePattern.test(inputToCheck.phone)) {
+    errors.phone = "Invalid phone number";
+  }
+
+  const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+  if (inputToCheck.url && !urlPattern.test(inputToCheck.url)) {
+    errors.url = "Invalid URL";
+  }
+
+  const altPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (inputToCheck.alt && !altPattern.test(inputToCheck.alt)) {
+    errors.alt = "Invalid Alt value";
+  }
+
+  const statePattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (inputToCheck.state && !statePattern.test(inputToCheck.state)) {
+    errors.state = "Invalid State value";
+  }
+
+  const countryPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!countryPattern.test(inputToCheck.country)) {
+    errors.country = "Invalid Country value";
+  }
+
+  const cityPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!cityPattern.test(inputToCheck.city)) {
+    errors.city = "Invalid City value";
+  }
+
+  const streetPattern = /^[a-zA-Z\s,'-]{2,256}$/;
+  if (!streetPattern.test(inputToCheck.street)) {
+    errors.street = "Invalid Street value";
+  }
+
+  const houseNumberPattern = /^[1-9]\d*$/;
+  if (!houseNumberPattern.test(inputToCheck.houseNumber)) {
+    errors.houseNumber = "Invalid House Number value";
+  }
+
+  const zipPattern = /^[1-9]\d*$/;
+  if (inputToCheck.zip && !zipPattern.test(inputToCheck.zip)) {
+    errors.zip = "Invalid Zip value";
+  }
+
+  return Object.keys(errors).length === 0 ? null : errors;
+};
+
+export { registerValidation };

@@ -110,6 +110,10 @@ const ProfilePage = () => {
             House Number:
             {inputsValue.address ? `${inputsValue.address.houseNumber}` : ""}
           </Typography>
+          <Typography variant="h6" textAlign="center">
+            Zip:
+            {inputsValue.address ? `${inputsValue.address.zip}` : ""}
+          </Typography>
           <FormControlLabel
             control={
               <Checkbox

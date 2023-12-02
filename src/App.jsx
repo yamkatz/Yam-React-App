@@ -12,7 +12,7 @@ const App = () => {
   useEffect(() => {
     (async () => {
       try {
-        await autoLogin(); //false is default
+        await autoLogin();
       } catch (err) {
         console.error(err);
       } finally {

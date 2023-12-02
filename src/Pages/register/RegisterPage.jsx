@@ -10,7 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { normalizeRegisterData } from "./normalizeRegisterData";
-import { validateRegister } from "../../validation/registerValidation";
+import { registerValidation } from "../../validation/registerValidation";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/ROUTES";
@@ -61,6 +61,7 @@ const RegisterPage = () => {
       "city",
       "street",
       "houseNumber",
+      "zip",
     ];
     return requiredFields.some((field) => !inputsValue[field]);
   };
@@ -100,27 +101,27 @@ const RegisterPage = () => {
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
-      const joiResponse = validateRegister({ inputsValue });
-      setErrorsState(joiResponse);
-      if (!joiResponse) return;
 
-      const errors = validateRegister(inputsValue);
-      if (errors) return;
+      const regexErrors = registerValidation(inputsValue);
+      setErrorsState(regexErrors);
 
-      let request = normalizeRegisterData(inputsValue, isBusinessAccount);
-      const { data } = await axios.post("/users", request);
+      if (!regexErrors) {
+        let request = normalizeRegisterData(inputsValue, isBusinessAccount);
 
-      navigate(ROUTES.LOGIN);
-      toast("You signed up successfully 👌", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+        const { data } = await axios.post("/users", request);
+
+        navigate(ROUTES.LOGIN);
+        toast("You signed up successfully 👌", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -159,7 +160,7 @@ const RegisterPage = () => {
           {renderTextField("city", "City", { required: true })}
           {renderTextField("street", "Street", { required: true })}
           {renderTextField("houseNumber", "House Number", { required: true })}
-          {renderTextField("zip", "Zip")}
+          {renderTextField("zip", "Zip", { required: true })}
           <Grid item xs={12}>
             <FormControlLabel
               control={

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Button, Box } from "@mui/material";
 import CardComponent from "../../components/CardComponent";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/ROUTES";
@@ -13,9 +13,11 @@ import { toast } from "react-toastify";
 import MoreInfoComponent from "../../components/MoreInfoComponent";
 
 let initialDataFromServer = [];
+const cardsPerPage = 8;
 
 const HomePage = () => {
   const [dataFromServer, setDataFromServer] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const userData = useSelector((bigPie) => bigPie.authSlice.userData);
   const query = useQueryParams();
@@ -62,33 +64,13 @@ const HomePage = () => {
       axios
         .delete(`/cards/${_id}`)
         .then(() => {
-          toast.success("Card deleted successfully! 😁", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+          toast.success("Card deleted successfully!✅");
         })
         .catch((error) => {
           const errorMessage = userData.isBusiness
             ? "You can only delete your own cards! 🚫"
             : "Error deleting the card ❌";
-
-          toast.error(errorMessage, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-
+          toast.error(errorMessage);
           setDataFromServer([...dataFromServer]);
           console.error("Error deleting card:", error);
         });
@@ -102,16 +84,7 @@ const HomePage = () => {
     if (cardToEdit && cardToEdit.user_id === userData._id) {
       navigate(`${ROUTES.EDITCARD}/${_id}`);
     } else {
-      toast("You can only edit your own cards!🚫", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toast.error("You can only edit your own cards!🚫");
     }
   };
 
@@ -124,17 +97,7 @@ const HomePage = () => {
       .patch(`/cards/${_id}`, { likes: likedCard.likes })
       .then(() => {})
       .catch((error) => {
-        toast.error("Error liking the card ❌", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
+        toast.error("Error liking the card ❌");
         console.error("Error liking card:", error);
       });
   };
@@ -147,11 +110,23 @@ const HomePage = () => {
     setSelectedCard(null);
   };
 
+  const totalPages = Math.ceil(dataFromServer.length / cardsPerPage);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    window.scrollTo(0, 0);
+  };
+
+  const visibleCards = dataFromServer.slice(
+    (currentPage - 1) * cardsPerPage,
+    currentPage * cardsPerPage
+  );
+
   return (
     <Container>
       <WelcomeComponent />
       <Grid container spacing={2}>
-        {dataFromServer.map((card) => (
+        {visibleCards.map((card) => (
           <Grid item key={card._id} xs={12} sm={6} md={4} lg={3}>
             <CardComponent
               _id={card._id}
@@ -174,6 +149,19 @@ const HomePage = () => {
           </Grid>
         ))}
       </Grid>
+      <Box m={3} textAlign="center">
+        {Array.from({ length: totalPages }).map((_, index) => (
+          <Button
+            key={index + 1}
+            variant="text"
+            onClick={() => handlePageChange(index + 1)}
+            sx={{ marginX: 1 }}
+            disabled={currentPage === index + 1}
+          >
+            {index + 1}
+          </Button>
+        ))}
+      </Box>
       {selectedCard && (
         <MoreInfoComponent
           cardDetails={selectedCard}

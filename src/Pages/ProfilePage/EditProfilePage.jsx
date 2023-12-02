@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { TextField, Grid, Typography, Button, Box } from "@mui/material";
-import { profileValidation } from "../../validation/profileValidation";
 import { Alert } from "@mui/material";
-import { normalizeProfileData } from "./normalizeProfileData";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes/ROUTES";
 import { useSelector } from "react-redux";
+import { profileValidation } from "../../validation/profileValidation";
+import { normalizeProfileData } from "./normalizeProfileData";
 
 const EditProfilePage = () => {
   const navigate = useNavigate();
@@ -42,6 +42,10 @@ const EditProfilePage = () => {
     }
   }, [userId]);
 
+  const getFieldByPath = (object, path) => {
+    return path.split(".").reduce((acc, current) => acc[current], object);
+  };
+
   const fetchUserValues = async () => {
     try {
       const response = await axios.get(`/users/${userId}`);
@@ -51,47 +55,33 @@ const EditProfilePage = () => {
     }
   };
 
-  const handleInputsChange = (e) => {
+  const handleInputsChange = (path, value) => {
+    const [rootKey, nestedKey] = path.split(".");
+
     setInputsValue((currentState) => ({
       ...currentState,
-      [e.target.id]: e.target.value,
+      [rootKey]: {
+        ...currentState[rootKey],
+        [nestedKey]: value,
+      },
     }));
   };
 
-  const isSubmitDisabled = () => {
-    const requiredFields = [
-      "first",
-      "last",
-      "phone",
-      "country",
-      "city",
-      "street",
-      "houseNumber",
-      "zip",
-    ];
-    return requiredFields.some((field) => !inputsValue[field]);
-  };
-
-  const renderTextField = (name, label, props) => (
-    <Grid item xs={12} key={name}>
+  const renderTextField = (path, label, props) => (
+    <Grid item xs={12} key={path}>
       <TextField
         required={props.required}
         fullWidth
-        id={name}
+        id={path}
         label={label}
-        name={name}
-        value={inputsValue[name] || ""}
-        autoComplete={`new-${name}`}
-        onChange={handleInputsChange}
+        name={path}
+        value={getFieldByPath(inputsValue, path) || ""}
+        autoComplete={`new-${path}`}
+        onChange={(e) => handleInputsChange(path, e.target.value)}
         {...props}
-        defaultValue={
-          name === "middle" && inputsValue.middle
-            ? inputsValue.middle
-            : undefined
-        }
       />
-      {errorsState && errorsState[name] && (
-        <Alert severity="warning">{errorsState[name]}</Alert>
+      {errorsState && errorsState[path] && (
+        <Alert severity="warning">{errorsState[path]}</Alert>
       )}
     </Grid>
   );
@@ -101,10 +91,11 @@ const EditProfilePage = () => {
       event.preventDefault();
 
       const regexErrors = profileValidation(inputsValue);
+      console.log("Regex Errors:", regexErrors);
       setErrorsState(regexErrors);
 
       if (!regexErrors) {
-        let request = normalizeProfileData(inputsValue);
+        const request = normalizeProfileData(inputsValue);
 
         const { data } = await axios.put(`/users/${userId}`, request);
 
@@ -119,10 +110,26 @@ const EditProfilePage = () => {
           progress: undefined,
           theme: "light",
         });
+      } else {
+        Object.values(regexErrors).forEach((error) => {
+          toast.error(error, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        });
       }
     } catch (error) {
       console.error("Error editing user details:", error);
     }
+  };
+  const handleClose = () => {
+    navigate(ROUTES.PROFILE);
   };
 
   return (
@@ -137,43 +144,36 @@ const EditProfilePage = () => {
       <Typography component="h1" variant="h5">
         Edit Your Profile
       </Typography>
-      <Box component="form" noValidate onSubmit={handleEdit} sx={{ mt: 3 }}>
-        <Grid container spacing={2}>
-          {renderTextField("first", "First Name", { required: true })}
-          {renderTextField("middle", "Middle Name", {
-            defaultValue: inputsValue.middle,
-          })}
-          {renderTextField("last", "Last Name", { required: true })}
-          {renderTextField("phone", "Phone", { required: true })}
-          {renderTextField("url", "Image URL", {
-            defaultValue: inputsValue.url,
-          })}
-          {renderTextField("alt", "Image Alt", {
-            defaultValue: inputsValue.alt,
-          })}
-          {renderTextField("state", "State", {
-            defaultValue: inputsValue.state,
-          })}
-          {renderTextField("country", "Country", {
-            required: true,
-          })}
-          {renderTextField("city", "City", { required: true })}
-          {renderTextField("street", "Street", { required: true })}
-          {renderTextField("houseNumber", "House Number", {
-            required: true,
-          })}
-          {renderTextField("zip", "Zip Code", {
-            required: true,
-          })}
-        </Grid>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          disabled={isSubmitDisabled()}
-        >
-          Edit
+
+      <Grid container spacing={2}>
+        {renderTextField("name.first", "First Name", {})}
+        {renderTextField("name.middle", "Middle Name", {})}
+        {renderTextField("name.last", "Last Name", {})}
+        {renderTextField("phone", "Phone", {})}
+        {renderTextField("image.url", "Image URL", {})}
+        {renderTextField("image.alt", "Image Alt", {})}
+        {renderTextField("address.state", "State", {})}
+        {renderTextField("address.country", "Country", {})}
+        {renderTextField("address.city", "City", {})}
+        {renderTextField("address.street", "Street", {})}
+        {renderTextField("address.houseNumber", "House Number", {})}
+        {renderTextField("address.zip", "ZIP Code", {})}
+      </Grid>
+
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "10px",
+          marginTop: "10px",
+        }}
+      >
+        <Button variant="contained" color="primary" onClick={handleEdit}>
+          Update
+        </Button>
+
+        <Button variant="contained" color="secondary" onClick={handleClose}>
+          Changed your mind? Go Back 😉
         </Button>
       </Box>
     </Box>
