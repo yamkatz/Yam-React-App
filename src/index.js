@@ -19,17 +19,7 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 axios.interceptors.request.use((config) => {
   const token = getToken();
   if (token) {
-    /*
-      if token exists we edit the request
-      adding headers
-      and sending the request to the server
-    */
     config.headers["x-auth-token"] = token;
-    /*
-      headers = {
-        x-auth-token:token
-      }
-    */
   }
   return config;
 });

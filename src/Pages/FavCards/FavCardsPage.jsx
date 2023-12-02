@@ -27,7 +27,7 @@ const FavCardsPage = () => {
         setDataFromServer(normalizedData);
       })
       .catch((err) => {
-        console.log("err", err);
+        console.error("err", err);
       });
   }, [userData?._id]);
 
@@ -152,8 +152,6 @@ const FavCardsPage = () => {
       >
         Here you can find your favorite cards. Explore the cards you liked.
       </Typography>
-
-      {/* Favorite Cards Grid */}
       <Grid container spacing={2}>
         {dataFromServer.map((card) => (
           <Grid item key={nextKey()} xs={12} sm={6} md={4} lg={3}>

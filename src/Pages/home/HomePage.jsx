@@ -26,12 +26,11 @@ const HomePage = () => {
       .get("/cards")
       .then(({ data }) => {
         if (userData) data = homePageNormalization(data, userData._id);
-        console.log("data", data);
         initialDataFromServer = data;
         setDataFromServer(data);
       })
       .catch((err) => {
-        console.log("err", err);
+        console.error("err", err);
       });
   }, []);
 

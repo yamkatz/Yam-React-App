@@ -14,10 +14,8 @@ const App = () => {
       try {
         await autoLogin(); //false is default
       } catch (err) {
-        console.log(err);
+        console.error(err);
       } finally {
-        //this block of code will executed when the promise done
-        //no matter if its done or got error
         setDoneAuth(true);
       }
     })();

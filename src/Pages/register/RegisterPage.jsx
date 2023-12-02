@@ -122,7 +122,7 @@ const RegisterPage = () => {
         theme: "light",
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

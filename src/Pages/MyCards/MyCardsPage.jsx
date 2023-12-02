@@ -24,15 +24,11 @@ const MyCardsPage = () => {
       axios
         .get("/cards/my-cards")
         .then(({ data }) => {
-          console.log("All cards from the server:", data);
-
           const myCardsData = myCardsNormalization(data, userData?._id);
-          console.log("My cards:", myCardsData);
-
           setMyCards(myCardsData);
         })
         .catch((err) => {
-          console.log("Error fetching cards:", err);
+          console.error("Error fetching cards:", err);
         });
     }
   }, [isLoggedIn, userData?._id]);
@@ -75,15 +71,10 @@ const MyCardsPage = () => {
   };
 
   const handleEditCard = (_id) => {
-    // Find the card in the myCards state
     const cardToEdit = myCards.find((card) => card._id === _id);
-
-    // Check if the card exists and if the user is the creator of the card
     if (cardToEdit && cardToEdit.user_id === userData?._id) {
-      // User is authorized to edit the card, navigate to the edit card page
       navigate(`${ROUTES.EDITCARD}/${_id}`);
     } else {
-      // User is not authorized, show a toast message
       toast.error("You can only edit your own cards! 🚫", {
         position: "top-right",
         autoClose: 5000,

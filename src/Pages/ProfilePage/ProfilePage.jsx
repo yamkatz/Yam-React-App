@@ -11,7 +11,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const userData = useSelector((bigPie) => bigPie.authSlice.userData);
   const userId = userData?._id ?? "";
-  const [isBusinessAccount, setIsBusinessAccount] = useState(false);
   const [inputsValue, setInputsValue] = useState({
     first: "",
     middle: "",

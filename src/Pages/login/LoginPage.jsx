@@ -56,7 +56,7 @@ const LoginPage = () => {
       window.location.reload();
       autoLogin(true);
     } catch (err) {
-      console.log("err from login", err);
+      console.error("err from login", err);
     }
   };
 
