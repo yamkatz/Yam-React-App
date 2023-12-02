@@ -107,7 +107,7 @@ const RegisterPage = () => {
       const errors = validateRegister(inputsValue);
       if (errors) return;
 
-      let request = normalizeRegisterData(inputsValue);
+      let request = normalizeRegisterData(inputsValue, isBusinessAccount);
       const { data } = await axios.post("/users", request);
 
       navigate(ROUTES.LOGIN);

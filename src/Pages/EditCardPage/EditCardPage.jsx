@@ -97,7 +97,7 @@ const EditCardPage = () => {
 
         const { data } = await axios.put("/cards/" + _id, request);
 
-        navigate(ROUTES.HOME);
+        navigate(ROUTES.MYCARDS);
         toast("Your edits were applied successfully 🔨👷‍♂️", {
           position: "top-right",
           autoClose: 5000,
